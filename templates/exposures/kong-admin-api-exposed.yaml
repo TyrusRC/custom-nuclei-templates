@@ -1,0 +1,34 @@
+# gap: kong-admin-api-exposed
+id: kong-admin-api-exposed
+
+info:
+  name: Kong API Gateway Admin API Exposed
+  author: TyrusRC
+  severity: high
+  description: |
+    Detects an unauthenticated Kong API Gateway Admin API accessible on
+    port 8001. An exposed Admin API allows full gateway reconfiguration,
+    upstream credential extraction, and arbitrary plugin installation,
+    effectively granting control over all proxied services.
+  reference:
+    - https://hacktricks.wiki/en/network-services-pentesting/pentesting-web/
+    - https://docs.konghq.com/gateway/latest/production/running-kong/secure-admin-api/
+  tags: custom,exposures,kong,api-gateway,panel
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "Welcome to kong"
+      - type: word
+        part: header
+        words:
+          - "application/json"

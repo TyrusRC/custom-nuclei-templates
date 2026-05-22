@@ -1,0 +1,29 @@
+# gap: netlify-takeover
+id: netlify-takeover
+
+info:
+  name: Netlify Subdomain Takeover Detection
+  author: TyrusRC
+  severity: high
+  description: |
+    Detects a dangling CNAME pointing to Netlify that returns the
+    service's "Not Found" page with a Netlify Request ID header,
+    indicating the subdomain can be claimed via the Netlify platform.
+  reference:
+    - https://github.com/EdOverflow/can-i-take-over-xyz/issues/40
+    - https://docs.netlify.com/domains-https/custom-domains/
+  tags: custom,takeover,netlify,cloud
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 404
+      - type: word
+        part: body
+        words:
+          - "Not Found - Request ID:"

@@ -1,0 +1,32 @@
+# gap: rabbitmq-default-admin
+id: rabbitmq-default-admin
+
+info:
+  name: RabbitMQ Default Guest Credentials Accepted
+  author: TyrusRC
+  severity: medium
+  description: |
+    Detects RabbitMQ management API instances where the default guest/guest
+    credentials are still active. A successful probe against /api/whoami
+    returns the authenticated user name, confirming that the factory-default
+    account has not been disabled or renamed as recommended by the vendor.
+  reference:
+    - https://github.com/pikpikcu/Nuclei-Templates/blob/master/security-misconfiguration/rabbitmq-default-admin.yaml
+    - https://www.rabbitmq.com/docs/access-control#default-state
+  tags: custom,misconfigurations,rabbitmq,default-login
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/api/whoami"
+    headers:
+      Authorization: "Basic Z3Vlc3Q6Z3Vlc3Q="
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - '"name":"guest"'

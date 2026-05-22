@@ -1,0 +1,29 @@
+# gap: heroku-takeover
+id: heroku-takeover
+
+info:
+  name: Heroku Subdomain Takeover Detection
+  author: TyrusRC
+  severity: high
+  description: |
+    Detects a dangling CNAME pointing to Heroku that returns the
+    service's "No such app" fingerprint, indicating the subdomain
+    can be claimed by registering the missing Heroku application.
+  reference:
+    - https://github.com/EdOverflow/can-i-take-over-xyz/issues/38
+    - https://devcenter.heroku.com/articles/custom-domains
+  tags: custom,takeover,heroku,cloud
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 404
+      - type: word
+        part: body
+        words:
+          - "No such app"
