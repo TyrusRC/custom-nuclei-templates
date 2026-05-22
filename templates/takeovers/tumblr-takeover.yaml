@@ -1,0 +1,28 @@
+# gap: tumblr-takeover
+id: tumblr-takeover
+
+info:
+  name: Tumblr Subdomain Takeover Detection
+  author: TyrusRC
+  severity: high
+  description: |
+    Detects a dangling CNAME pointing to Tumblr that returns the service's
+    "Whatever you were looking for doesn't currently exist at this address."
+    fingerprint, indicating the subdomain can be claimed via a new Tumblr blog.
+  reference:
+    - https://github.com/EdOverflow/can-i-take-over-xyz/issues/240
+  tags: custom,takeover,tumblr,cloud
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 404
+      - type: word
+        part: body
+        words:
+          - "Whatever you were looking for doesn't currently exist at this address."

@@ -1,0 +1,28 @@
+# gap: shopify-takeover
+id: shopify-takeover
+
+info:
+  name: Shopify Subdomain Takeover Detection
+  author: TyrusRC
+  severity: high
+  description: |
+    Detects a dangling CNAME pointing to Shopify that returns the service's
+    "Sorry, this shop is currently unavailable." fingerprint. The subdomain
+    can be claimed by registering the missing Shopify storefront.
+  reference:
+    - https://github.com/EdOverflow/can-i-take-over-xyz/issues/32
+  tags: custom,takeover,shopify,cloud
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 404
+      - type: word
+        part: body
+        words:
+          - "Sorry, this shop is currently unavailable."

@@ -1,0 +1,28 @@
+# gap: debug-pprof
+id: debug-pprof
+
+info:
+  name: Go pprof Debug Endpoint Exposed
+  author: TyrusRC
+  severity: low
+  description: |
+    Detects an exposed Go net/http/pprof debug endpoint that lists profiling
+    data types available for download. This endpoint leaks application internals
+    and heap/goroutine profiles that can aid reverse engineering or DoS attacks.
+  reference:
+    - https://github.com/pikpikcu/Nuclei-Templates/blob/master/files/debug-pprof.yaml
+  tags: custom,debug,pprof,golang,exposure
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/debug/pprof/"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "Types of profiles available"
