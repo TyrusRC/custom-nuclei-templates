@@ -28,11 +28,16 @@ echo "Building CVE index ..."
 } | sort -u > "$INDEX_DIR/cves.txt"
 
 echo "Building id index ..."
-grep -rhoE '^id:[[:space:]]*[A-Za-z0-9_.-]+' "$CACHE_DIR" \
-  | awk '{print $2}' | sort -u > "$INDEX_DIR/ids.txt"
+# Extract the value after "id:" with sed (handles both "id: value" and "id:value").
+grep -rhE '^id:[[:space:]]*[A-Za-z0-9_.-]+' "$CACHE_DIR" 2>/dev/null \
+  | sed -E 's/^id:[[:space:]]*//' \
+  | sort -u > "$INDEX_DIR/ids.txt" || true
 
 echo "Building tag index ..."
 # tags: appear as comma-separated strings; split on commas + strip whitespace.
+# Heuristic: lines beginning with optional whitespace then "tags:" capture
+# top-level template tags. Inline-flow YAML (e.g. metadata: { tags: ... })
+# would not match because "tags:" isn't at the start of a logical line.
 grep -rhE '^[[:space:]]*tags:' "$CACHE_DIR" \
   | sed -E 's/^[[:space:]]*tags:[[:space:]]*//' \
   | tr ',' '\n' \
