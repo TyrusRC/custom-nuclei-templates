@@ -1,0 +1,29 @@
+# gap: webflow-takeover
+id: webflow-takeover
+
+info:
+  name: Webflow Subdomain Takeover Detection
+  author: TyrusRC
+  severity: high
+  description: |
+    Detects a dangling CNAME pointing to Webflow that returns the service's
+    "The page you are looking for doesn't exist or has been moved." fingerprint,
+    indicating the subdomain can be claimed by registering a Webflow project.
+  reference:
+    - https://github.com/EdOverflow/can-i-take-over-xyz/issues/44
+    - https://webflow.com/blog/custom-domains
+  tags: custom,takeover,webflow,cloud
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 404
+      - type: word
+        part: body
+        words:
+          - "The page you are looking for doesn't exist or has been moved."
