@@ -1,0 +1,38 @@
+# gap: couchbase-buckets-rest-api
+id: couchbase-buckets-rest-api
+
+info:
+  name: Couchbase Buckets REST API Unauthenticated
+  author: TyrusRC
+  severity: info
+  description: |
+    Detects an unauthenticated Couchbase /pools/default/buckets REST API
+    response. The endpoint returns the cluster's bucket inventory including
+    bucket names, node addresses, quota configuration, and bucket type,
+    providing data-plane reconnaissance without credentials.
+  reference:
+    - https://docs.couchbase.com/server/current/rest-api/rest-bucket-info.html
+  tags: custom,exposures,couchbase,database,api
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/pools/default/buckets"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: header
+        case-insensitive: true
+        words:
+          - "application/json"
+      - type: word
+        part: body
+        words:
+          - "couchbase"
+          - "bucket"
+          - "nodes"
+          - "bucketType"
+        condition: and

@@ -1,0 +1,38 @@
+# gap: aws-lambda-function-url-unauth
+id: aws-lambda-function-url-unauth
+
+info:
+  name: AWS Lambda Function URL Exposed Without Authentication
+  author: TyrusRC
+  severity: high
+  description: |
+    Detects AWS Lambda Function URLs configured with AuthType NONE. A GET
+    request to the *.lambda-url.<region>.on.aws/ endpoint without SigV4
+    signing returns HTTP 200 with the function response body instead of
+    a 403 Forbidden, indicating unauthenticated invocation is permitted.
+  reference:
+    - https://raw.githubusercontent.com/HackTricks-wiki/hacktricks-cloud/master/src/pentesting-cloud/aws-security/aws-unauthenticated-enum-access/aws-lambda-unauthenticated-access/README.md
+    - https://docs.aws.amazon.com/lambda/latest/dg/urls-auth.html
+  tags: custom,cloud,aws,lambda,misconfig
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: dsl
+        dsl:
+          - 'contains(host, ".lambda-url.")'
+          - 'contains(host, ".on.aws")'
+        condition: and
+      - type: word
+        part: body
+        negative: true
+        words:
+          - "Forbidden"
+          - "AccessDenied"
+        condition: or

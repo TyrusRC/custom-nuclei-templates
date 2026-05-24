@@ -1,0 +1,33 @@
+# gap: pi-hole-detect
+id: pi-hole-detect
+
+info:
+  name: Pi-hole Admin Interface Exposed
+  author: TyrusRC
+  severity: info
+  description: |
+    Detects an exposed Pi-hole admin web interface. The presence of a public
+    Pi-hole dashboard reveals DNS sinkhole topology and the FTL backend, and
+    historical Pi-hole versions have shipped authenticated RCE and auth-bypass
+    vulnerabilities that make discovery of the panel worth tracking.
+  reference:
+    - https://github.com/pi-hole/AdminLTE
+    - https://docs.pi-hole.net/
+  tags: custom,exposures,pi-hole,dns,panel
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/admin/index.php"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "Pi-hole"
+          - "Web Interface"
+          - "FTL"
+        condition: and

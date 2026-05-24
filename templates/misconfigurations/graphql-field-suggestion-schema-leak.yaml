@@ -1,0 +1,37 @@
+# gap: graphql-field-suggestion-schema-leak
+id: graphql-field-suggestion-schema-leak
+
+info:
+  name: GraphQL Field Suggestion Leaks Schema Without Introspection
+  author: TyrusRC
+  severity: low
+  description: |
+    Detects GraphQL endpoints that return "Did you mean" field suggestions
+    when an unknown field is queried. The suggestion mechanism reveals valid
+    type and field names, enabling schema enumeration even when introspection
+    has been explicitly disabled.
+  reference:
+    - https://raw.githubusercontent.com/swisskyrepo/PayloadsAllTheThings/master/GraphQL%20Injection/README.md
+    - https://blog.yeswehack.com/yeswerhackers/how-exploit-graphql-endpoint-bug-bounty/
+  tags: custom,misconfig,graphql,owasp
+
+http:
+  - method: POST
+    path:
+      - "{{BaseURL}}/graphql"
+      - "{{BaseURL}}/api/graphql"
+      - "{{BaseURL}}/graphql/v1"
+    stop-at-first-match: true
+    headers:
+      Content-Type: application/json
+    body: '{"query":"{thisdefinitelydoesnotexist}"}'
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - "Did you mean"
+      - type: word
+        part: body
+        words:
+          - "errors"
