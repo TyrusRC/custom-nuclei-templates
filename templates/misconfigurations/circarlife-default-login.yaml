@@ -1,0 +1,40 @@
+# gap: circarlife-default-login
+id: circarlife-default-login
+
+info:
+  name: CirCarLife EV Charger Default Credentials Accepted
+  author: TyrusRC
+  severity: medium
+  description: |
+    Detects a Circontrol CirCarLife EV-charger / OCPP Engine whose
+    /html/setup.html accepts the factory-default admin:1234 HTTP
+    Basic credentials. The match confirms successful authentication
+    by looking for post-login setup-page elements ("OCPP Engine -
+    Setup" title and the "Application Parameters" section heading),
+    not the unauthenticated login challenge. Default credentials on
+    these devices allow remote modification of charge-station
+    configuration and OCPP back-end pointers.
+  reference:
+    - https://github.com/geeknik/the-nuclei-templates/blob/main/circarlife-default-login.yaml
+    - https://www.cisa.gov/news-events/ics-advisories/icsa-19-031-01
+  tags: custom,misconfigurations,iot,circarlife,default-login
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/html/setup.html"
+    headers:
+      Authorization: "Basic YWRtaW46MTIzNA=="
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "OCPP Engine - Setup"
+      - type: word
+        part: body
+        words:
+          - "Application Parameters"

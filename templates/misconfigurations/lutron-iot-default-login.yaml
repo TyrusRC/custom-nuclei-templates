@@ -1,0 +1,41 @@
+# gap: lutron-iot-default-login
+id: lutron-iot-default-login
+
+info:
+  name: Lutron IoT Controller Default Credentials Accepted
+  author: TyrusRC
+  severity: medium
+  description: |
+    Detects a Lutron lighting controller whose web UI accepts the
+    factory-default credentials lutron/lutron via the GET-based login
+    handler at /login. The match confirms successful authentication
+    by looking for post-login menu items (DeviceIP, Get Database
+    Info as XML) that only render after the session is established,
+    so the finding is not satisfied by a generic login form that
+    simply returns the brand name.
+  reference:
+    - https://github.com/geeknik/the-nuclei-templates/blob/main/lutron-iot-default-login.yaml
+    - https://www.lutron.com/TechnicalDocumentLibrary/040249.pdf
+  tags: custom,misconfigurations,iot,lutron,default-login
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/login?login=lutron&password=lutron"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "<TITLE>LUTRON</TITLE>"
+      - type: word
+        part: body
+        words:
+          - "DeviceIP"
+      - type: word
+        part: body
+        words:
+          - "Get Database Info as XML"

@@ -1,0 +1,36 @@
+# gap: landfill-remote-monitoring-control
+id: landfill-remote-monitoring-control
+
+info:
+  name: SCS RMC Landfill Remote Monitoring Panel Exposed
+  author: TyrusRC
+  severity: info
+  description: |
+    Detects an SCS Remote Monitoring & Control (RMC) login portal
+    facing the public internet. SCS RMC is a SCADA-style platform
+    used to monitor landfill gas extraction wells and wastewater
+    infrastructure; exposing it on the open internet broadens the
+    attack surface against the underlying control plane and invites
+    credential brute force.
+  reference:
+    - https://github.com/geeknik/the-nuclei-templates/blob/main/landfill-remote-monitoring-control.yaml
+    - https://www.scsengineers.com/scs-services/remote-monitoring-control/
+  tags: custom,exposures,scada,iot,scs-rmc
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "<title>Log in to SCS RMC"
+      - type: word
+        part: body
+        words:
+          - "SCS RMC"
