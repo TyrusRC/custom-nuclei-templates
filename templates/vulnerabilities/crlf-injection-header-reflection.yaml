@@ -32,12 +32,15 @@ http:
     stop-at-first-match: true
     matchers-condition: and
     matchers:
+      - type: status
+        status:
+          - 200
+          - 301
+          - 302
+          - 303
+          - 307
+          - 308
       - type: regex
         part: header
         regex:
           - "(?i)X-Nuclei-CRLF-Canary:\\s*1"
-      - type: status
-        negative: true
-        status:
-          - 400
-          - 404

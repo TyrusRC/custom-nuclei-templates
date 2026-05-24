@@ -50,4 +50,5 @@ http:
           - "instance-type"
           - "availability-zone"
           - "instance/service-accounts/default/token"
-          - "project-id"
+          - "instance/service-accounts/default/"
+          - "numeric-project-id"

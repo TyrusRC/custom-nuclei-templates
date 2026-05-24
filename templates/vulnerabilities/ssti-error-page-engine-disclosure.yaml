@@ -35,17 +35,18 @@ http:
         case-insensitive: true
         words:
           - "text/html"
-          - "text/plain"
-          - "application/json"
-        condition: or
       - type: word
         part: body
         case-insensitive: true
+        words:
+          - "Division"
+      - type: word
+        part: body
         condition: or
         words:
           - "ZeroDivisionError"
           - "java.lang.ArithmeticException"
-          - "Division by zero"
-          - "divided by 0"
           - "FreeMarker template error"
           - "org.thymeleaf.exceptions.TemplateProcessingException"
+          - "Twig_Error_Runtime"
+          - "ActionView::Template::Error"
