@@ -7,15 +7,16 @@ info:
   severity: medium
   description: |
     Generic probe for public cloud-storage buckets across AWS S3,
-    Google Cloud Storage, and Azure Blob. Issues GET /?list-type=2
-    (S3 ListBucket V2 query) against the target and matches a
-    bucket-listing XML response (ListBucketResult / EnumerationResults
-    / ListAllMyBucketsResult). A DSL host gate restricts firing to
-    s3.amazonaws.com, storage.googleapis.com, or blob.core.windows.net
-    so probing arbitrary HTTP targets does not generate noise.
-    Operator must point the template at an already-discovered bucket
-    URL (e.g. https://mybucket.s3.amazonaws.com/); probing the
-    provider apex without a bucket name is not actionable.
+    Google Cloud Storage, and Azure Blob. Issues the provider-canonical
+    listing queries (S3 ?list-type=2, Azure ?restype=container&comp=list,
+    and a plain GET / for GCS) and matches a bucket-listing XML response
+    (ListBucketResult / EnumerationResults / ListAllMyBucketsResult).
+    A DSL host gate restricts firing to s3*.amazonaws.com,
+    storage.googleapis.com, or blob.core.windows.net so probing arbitrary
+    HTTP targets does not generate noise. Operator must point the
+    template at an already-discovered bucket URL (e.g.
+    https://mybucket.s3.amazonaws.com/); probing the provider apex
+    without a bucket name is not actionable.
   reference:
     - https://owasp.org/www-project-web-security-testing-guide/stable/4-Web_Application_Security_Testing/02-Configuration_and_Deployment_Management_Testing/11-Test_Cloud_Storage
     - https://docs.aws.amazon.com/AmazonS3/latest/API/API_ListObjectsV2.html
@@ -25,6 +26,9 @@ http:
   - method: GET
     path:
       - "{{BaseURL}}/?list-type=2"
+      - "{{BaseURL}}/?restype=container&comp=list"
+      - "{{BaseURL}}/"
+    stop-at-first-match: true
     matchers-condition: and
     matchers:
       - type: status
@@ -32,7 +36,7 @@ http:
           - 200
       - type: dsl
         dsl:
-          - 'contains(host, ".s3.amazonaws.com") || contains(host, ".storage.googleapis.com") || contains(host, ".blob.core.windows.net")'
+          - '(contains(host, "s3") && contains(host, ".amazonaws.com")) || contains(host, ".storage.googleapis.com") || contains(host, ".blob.core.windows.net")'
       - type: word
         part: body
         condition: or
