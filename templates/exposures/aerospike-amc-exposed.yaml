@@ -28,5 +28,6 @@ http:
         part: body
         words:
           - "Aerospike Management Console"
-          - "<title>AMC"
+          - "<title>AMC - Aerospike"
+          - "amccontroller.js"
         condition: or

@@ -28,3 +28,6 @@ http:
         part: body
         words:
           - "OrientDB Studio"
+          - "ng-app=\"Studio\""
+          - "studio.css"
+        condition: or

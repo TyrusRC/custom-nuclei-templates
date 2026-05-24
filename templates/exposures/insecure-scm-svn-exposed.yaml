@@ -20,19 +20,8 @@ http:
   - method: GET
     path:
       - "{{BaseURL}}/.svn/wc.db"
-    matchers-condition: and
-    matchers:
-      - type: status
-        status:
-          - 200
-      - type: word
-        part: body
-        words:
-          - "SQLite format 3"
-
-  - method: GET
-    path:
       - "{{BaseURL}}/.svn/entries"
+    stop-at-first-match: true
     matchers-condition: and
     matchers:
       - type: status
@@ -41,6 +30,7 @@ http:
       - type: regex
         part: body
         regex:
+          - "^SQLite format 3"
           - "(?m)^(dir|file)$"
-          - "svn://|http(s)?://[^\\s]+"
+          - "svn://|https?://[^\\s]+"
         condition: or

@@ -28,6 +28,10 @@ http:
         part: body
         words:
           - "<title>Observium"
+      - type: word
+        part: body
+        words:
           - "href=\"http://www.observium.org\""
-          - "Observium Network Management"
+          - "/images/observium"
+          - "observium_logo"
         condition: or

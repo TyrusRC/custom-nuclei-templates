@@ -27,4 +27,12 @@ http:
       - type: word
         part: body
         words:
-          - "<title>Chronograf</title>"
+          - "<title>Chronograf"
+          - "/chronograf/v1/"
+          - "data-react-helmet"
+        condition: or
+      - type: word
+        part: body
+        case-insensitive: true
+        words:
+          - "chronograf"
