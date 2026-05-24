@@ -28,12 +28,7 @@ http:
       - type: status
         status:
           - 200
-      - type: word
+      - type: regex
         part: body
-        words:
-          - '"gitVersion"'
-      - type: word
-        part: body
-        case-insensitive: true
-        words:
-          - "openshift"
+        regex:
+          - '"gitVersion"\s*:\s*"[^"]*openshift[^"]*"'

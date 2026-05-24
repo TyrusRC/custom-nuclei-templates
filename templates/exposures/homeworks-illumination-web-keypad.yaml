@@ -27,9 +27,11 @@ http:
           - 200
       - type: word
         part: body
+        case-insensitive: true
         words:
-          - "HomeWorks Illumination Web Keypad"
+          - "homeworks illumination web keypad"
       - type: word
         part: body
+        case-insensitive: true
         words:
-          - "Lutron"
+          - "lutron"

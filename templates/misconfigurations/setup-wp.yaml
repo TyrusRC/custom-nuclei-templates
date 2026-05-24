@@ -30,6 +30,8 @@ http:
         part: body
         words:
           - "Database Name"
+          - 'name="dbname"'
+        condition: or
       - type: word
         part: body
         words:

@@ -28,9 +28,11 @@ http:
           - 200
       - type: word
         part: body
+        case-insensitive: true
         words:
-          - "<title>Log in to SCS RMC"
+          - "log in to scs rmc"
       - type: word
         part: body
+        case-insensitive: true
         words:
-          - "SCS RMC"
+          - "scs rmc"

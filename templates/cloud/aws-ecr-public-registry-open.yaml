@@ -4,16 +4,15 @@ id: aws-ecr-public-registry-open
 info:
   name: AWS ECR Public Registry Endpoint Reachable
   author: TyrusRC
-  severity: medium
+  severity: info
   description: |
-    Detects a reachable Amazon ECR Public registry endpoint
-    (*.public.ecr.aws) by probing /v2/. The endpoint advertises the
-    Docker Registry HTTP API v2 via the Docker-Distribution-Api-Version
-    response header and returns either HTTP 200 (catalog/version probe
-    accepted) or HTTP 401 (bearer-token challenge for pulls) while still
-    exposing the registry header. Confirming an unintended publication
-    of internal images requires reviewing the publishing AWS account's
-    repository visibility and IAM policy.
+    Confirms the AWS ECR Public registry HTTP API v2 endpoint
+    (*.public.ecr.aws/v2/) is reachable. The endpoint is intentionally
+    public by AWS design, so this is a precondition signal rather than
+    a finding on its own — actionable exposure requires that a specific
+    alias/repo under the target's AWS account is enumerable. Pair with
+    a /v2/{alias}/{repo}/tags/list probe scoped to the target's known
+    aliases to confirm unintended publication of internal images.
   reference:
     - https://raw.githubusercontent.com/HackTricks-wiki/hacktricks-cloud/master/src/pentesting-cloud/aws-security/aws-unauthenticated-enum-access/aws-ecr-unauthenticated-enum/README.md
     - https://docs.aws.amazon.com/AmazonECR/latest/public/public-registries.html

@@ -30,12 +30,13 @@ http:
       - type: word
         part: body
         words:
-          - "<TITLE>LUTRON</TITLE>"
+          - "Get Database Info as XML"
       - type: word
         part: body
         words:
           - "DeviceIP"
       - type: word
         part: body
+        case-insensitive: true
         words:
-          - "Get Database Info as XML"
+          - "lutron"

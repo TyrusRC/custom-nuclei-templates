@@ -22,15 +22,35 @@ http:
   - method: GET
     path:
       - "{{BaseURL}}/health/mqtt"
+    matchers-condition: and
     matchers:
       - type: status
         status:
           - 200
+      - type: word
+        part: header
+        case-insensitive: true
+        words:
+          - "application/json"
+      - type: word
+        part: body
+        words:
+          - '"status"'
 
   - method: GET
     path:
       - "{{BaseURL}}/health/zwave"
+    matchers-condition: and
     matchers:
       - type: status
         status:
           - 200
+      - type: word
+        part: header
+        case-insensitive: true
+        words:
+          - "application/json"
+      - type: word
+        part: body
+        words:
+          - '"status"'

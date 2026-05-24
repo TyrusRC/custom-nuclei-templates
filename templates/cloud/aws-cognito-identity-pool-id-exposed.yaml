@@ -22,6 +22,14 @@ http:
   - method: GET
     path:
       - "{{BaseURL}}/"
+      - "{{BaseURL}}/config.js"
+      - "{{BaseURL}}/env.js"
+      - "{{BaseURL}}/runtime.js"
+      - "{{BaseURL}}/bundle.js"
+      - "{{BaseURL}}/static/js/main.js"
+      - "{{BaseURL}}/js/main.js"
+      - "{{BaseURL}}/assets/config.js"
+    stop-at-first-match: true
     matchers-condition: and
     matchers:
       - type: status
