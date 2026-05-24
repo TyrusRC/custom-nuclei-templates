@@ -26,8 +26,15 @@ http:
           - 200
       - type: word
         part: body
+        case-insensitive: true
         words:
-          - "<title>Weave Scope</title>"
-          - "__WEAVEWORKS_CSRF_TOKEN"
-          - "__CSRF_TOKEN_PLACEHOLDER__"
+          - "weave scope"
+          - "weaveworks"
         condition: and
+      - type: word
+        part: body
+        words:
+          - "terminal.js"
+          - "scope-ui"
+          - "<title>"
+        condition: or

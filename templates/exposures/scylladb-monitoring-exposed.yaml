@@ -27,13 +27,11 @@ http:
           - 200
       - type: word
         part: body
+        case-insensitive: true
         words:
-          - "ScyllaDB"
-          - "scylla"
-        condition: and
+          - "scylladb"
       - type: word
         part: body
+        case-insensitive: true
         words:
-          - "Grafana"
-          - "grafana-app"
-        condition: or
+          - "grafana"

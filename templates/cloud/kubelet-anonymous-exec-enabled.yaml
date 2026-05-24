@@ -12,6 +12,10 @@ info:
     HTTP 200 with a PodList JSON body, indicating the operator can also
     reach /run, /exec, and /attach to execute arbitrary commands inside
     running containers on the node.
+
+    Target the kubelet HTTPS port directly, e.g.
+    `nuclei -u https://node.example.com:10250 -t templates/cloud/kubelet-anonymous-exec-enabled.yaml`.
+    Kubelets typically present a self-signed cert; pair with `-insecure`.
   reference:
     - https://raw.githubusercontent.com/HackTricks-wiki/hacktricks-cloud/master/src/pentesting-cloud/kubernetes-security/pentesting-kubernetes-services/kubelet-authentication-and-authorization.md
     - https://kubernetes.io/docs/reference/access-authn-authz/kubelet-authn-authz/

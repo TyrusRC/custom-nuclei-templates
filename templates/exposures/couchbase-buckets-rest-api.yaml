@@ -31,8 +31,7 @@ http:
       - type: word
         part: body
         words:
-          - "couchbase"
-          - "bucket"
-          - "nodes"
-          - "bucketType"
+          - '"bucketType"'
+          - '"nodes"'
+          - '"name"'
         condition: and

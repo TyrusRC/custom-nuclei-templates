@@ -26,8 +26,8 @@ http:
           - 200
       - type: word
         part: body
+        case-insensitive: true
         words:
-          - "Pi-hole"
-          - "Web Interface"
-          - "FTL"
+          - "pi-hole"
+          - "admin/style/vendor/AdminLTE"
         condition: and

@@ -31,5 +31,6 @@ http:
         part: body
         words:
           - "Squid Object Cache"
-          - "cachemgr"
+          - "cachemgr_passwd"
+          - "Cache Manager menu"
         condition: or

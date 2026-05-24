@@ -10,6 +10,11 @@ info:
     when an unknown field is queried. The suggestion mechanism reveals valid
     type and field names, enabling schema enumeration even when introspection
     has been explicitly disabled.
+
+    Coverage note: detection is specific to graphql-js, Apollo, and Ariadne
+    (Python) servers that emit "Did you mean" suggestions. graphql-go,
+    gqlgen, juniper, and Hot Chocolate do not emit this phrase and will
+    not be detected.
   reference:
     - https://raw.githubusercontent.com/swisskyrepo/PayloadsAllTheThings/master/GraphQL%20Injection/README.md
     - https://blog.yeswehack.com/yeswerhackers/how-exploit-graphql-endpoint-bug-bounty/
@@ -24,6 +29,7 @@ http:
     stop-at-first-match: true
     headers:
       Content-Type: application/json
+      Accept: application/json
     body: '{"query":"{thisdefinitelydoesnotexist}"}'
     matchers-condition: and
     matchers:
@@ -34,4 +40,4 @@ http:
       - type: word
         part: body
         words:
-          - "errors"
+          - '"errors"'
