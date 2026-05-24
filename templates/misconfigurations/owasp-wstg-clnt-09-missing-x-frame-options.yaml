@@ -6,11 +6,13 @@ info:
   author: TyrusRC
   severity: low
   description: |
-    Detects responses that omit both the X-Frame-Options header and a
+    Detects HTML responses that omit both the X-Frame-Options header and a
     Content-Security-Policy frame-ancestors directive. This template only
-    fires when neither protection is present, meaning the page can be
-    embedded in an attacker-controlled iframe and used for clickjacking
-    or UI-redress attacks against authenticated users.
+    fires for text/html responses where neither protection is present,
+    meaning the page can be embedded in an attacker-controlled iframe and
+    used for clickjacking or UI-redress attacks against authenticated
+    users. JSON/API/asset endpoints are skipped because they are not
+    framable surfaces.
   reference:
     - https://owasp.org/www-project-web-security-testing-guide/stable/4-Web_Application_Security_Testing/11-Client-side_Testing/09-Testing_for_Clickjacking
     - https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options
@@ -25,6 +27,11 @@ http:
       - type: status
         status:
           - 200
+      - type: word
+        part: header
+        case-insensitive: true
+        words:
+          - "content-type: text/html"
       - type: word
         part: header
         case-insensitive: true

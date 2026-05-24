@@ -4,7 +4,7 @@ id: owasp-wstg-info-02-server-version-disclosure
 info:
   name: Web Server Version Disclosure in Response Headers
   author: TyrusRC
-  severity: low
+  severity: info
   description: |
     Detects responses that disclose a fully qualified web-server or
     application-runtime version in the Server or X-Powered-By header

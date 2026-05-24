@@ -35,9 +35,6 @@ http:
       - type: status
         status:
           - 200
-      - type: dsl
-        dsl:
-          - "len(body) > 0"
       - type: word
         part: header
         case-insensitive: true

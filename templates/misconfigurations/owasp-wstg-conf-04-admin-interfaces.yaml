@@ -4,7 +4,7 @@ id: owasp-wstg-conf-04-admin-interfaces
 info:
   name: Generic Admin Interface Exposure
   author: TyrusRC
-  severity: medium
+  severity: info
   description: |
     Detects generic administrative or management interfaces reachable on a
     curated list of conventional paths (/admin/, /administrator/,
@@ -40,7 +40,8 @@ http:
         words:
           - "<title>Admin"
           - "<title>Administration"
-          - "<title>Login"
+          - "<title>Admin Login"
+          - "<title>Admin Panel"
           - "Sign in to Administration"
           - "Administrator Login"
           - "Control Panel"
