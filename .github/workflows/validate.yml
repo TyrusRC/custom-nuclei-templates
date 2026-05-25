@@ -1,0 +1,40 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install yamllint
+        run: pip install --user yamllint
+
+      - name: Install nuclei
+        run: |
+          curl -sSLo nuclei.zip https://github.com/projectdiscovery/nuclei/releases/download/v3.4.7/nuclei_3.4.7_linux_amd64.zip
+          unzip -q nuclei.zip nuclei
+          sudo mv nuclei /usr/local/bin/
+
+      - name: Install bats
+        run: sudo apt-get update && sudo apt-get install -y bats
+
+      - name: yamllint
+        run: make lint
+
+      - name: nuclei -validate
+        run: make validate
+
+      - name: severity-lint
+        run: make severity-lint
+
+      - name: template-meta-lint
+        run: make template-meta-lint
+
+      - name: bats unit tests
+        run: make test
