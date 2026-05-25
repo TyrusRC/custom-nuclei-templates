@@ -2,7 +2,7 @@
 
 Nuclei v3 templates filling gaps in [projectdiscovery/nuclei-templates](https://github.com/projectdiscovery/nuclei-templates) and [projectdiscovery/nuclei-templates-ai](https://github.com/projectdiscovery/nuclei-templates-ai).
 
-83 templates · evergreen **bug-class / family detection** — patterns that catch future CVEs in the same class, not single named CVEs.
+88 templates · evergreen **bug-class / family detection** — patterns that catch future CVEs in the same class, not single named CVEs.
 
 ## Why no `cves/`?
 
@@ -22,10 +22,10 @@ Every template carries the `custom` tag and a `# gap: <id>` first line documenti
 | Dir | Count | Scope |
 |---|---|---|
 | `cloud/` | 12 | AWS / GCP / Azure / Kubernetes misconfigs and unauth surfaces |
-| `exposures/` | 32 | Admin panels, config files, debug endpoints, Spring Boot actuator family |
+| `exposures/` | 35 | Admin panels, config files, debug endpoints, Spring Boot actuator, Elasticsearch / Jenkins / Prometheus |
 | `misconfigurations/` | 25 | CORS, security headers, OWASP WSTG, default creds |
 | `takeovers/` | 9 | Subdomain-takeover fingerprints (heroku, netlify, shopify, …) |
-| `vulnerabilities/` | 5 | Active-class probes (SSTI, CRLF, SSRF IMDS, OAuth redirect) |
+| `vulnerabilities/` | 7 | Active-class probes (SSTI, CRLF, SSRF IMDS, OAuth redirect, JWT-none, NoSQL injection) |
 
 ## Develop
 
