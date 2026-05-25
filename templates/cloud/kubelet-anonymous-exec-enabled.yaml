@@ -25,14 +25,16 @@ http:
   - method: GET
     path:
       - "{{BaseURL}}/pods"
+      - "{{BaseURL}}/runningpods/"
+      - "{{BaseURL}}/configz"
+    stop-at-first-match: true
     matchers-condition: and
     matchers:
       - type: status
         status:
           - 200
-      - type: word
-        part: body
-        words:
-          - '"kind":"PodList"'
-          - '"items"'
-        condition: and
+      - type: dsl
+        dsl:
+          - 'contains(body, "\"kind\":\"PodList\"") && contains(body, "\"items\"")'
+          - 'contains(body, "\"kind\":\"KubeletConfiguration\"") || contains(body, "\"kubeletconfig\"")'
+        condition: or

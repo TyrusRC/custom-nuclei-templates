@@ -4,7 +4,7 @@ id: insecure-scm-svn-exposed
 info:
   name: SVN Repository Artifacts Exposed via HTTP
   author: TyrusRC
-  severity: high
+  severity: critical
   description: |
     Detects a Subversion working copy whose .svn directory is reachable over
     HTTP. Either the wc.db SQLite store or the legacy entries file is

@@ -20,13 +20,36 @@ http:
     path:
       - "{{BaseURL}}/WEB-INF/web.xml"
       - "{{BaseURL}}/WEB-INF/web.xml.bak"
+      - "{{BaseURL}}/WEB-INF/classes/application.properties"
+      - "{{BaseURL}}/WEB-INF/classes/application.yml"
+      - "{{BaseURL}}/WEB-INF/classes/application.yaml"
+      - "{{BaseURL}}/WEB-INF/classes/config.properties"
+      - "{{BaseURL}}/META-INF/MANIFEST.MF"
+      - "{{BaseURL}}/WEB-INF/classes/log4j.properties"
+      - "{{BaseURL}}/WEB-INF/classes/log4j2.xml"
     stop-at-first-match: true
     matchers-condition: and
     matchers:
       - type: status
         status:
           - 200
-      - type: word
+      - type: dsl
+        dsl:
+          - 'contains(body, "<web-app")'
+          - 'regex("(?im)^\\s*(spring\\.|server\\.|jdbc\\.|hibernate\\.|logging\\.|datasource\\.)[a-z0-9_.-]+\\s*[:=]", body)'
+          - 'contains(body, "Manifest-Version:")'
+          - 'contains(tolower(body), "log4j") && (contains(body, "rootlogger") || contains(body, "<configuration"))'
+        condition: or
+    extractors:
+      - type: regex
         part: body
-        words:
-          - "<web-app"
+        name: spring_datasource
+        group: 1
+        regex:
+          - '(?im)^\s*(spring\.datasource\.[a-z.-]+\s*[:=]\s*[^\r\n]+)'
+      - type: regex
+        part: body
+        name: manifest_version
+        group: 1
+        regex:
+          - '(?im)Implementation-Version:\s*([^\r\n]+)'

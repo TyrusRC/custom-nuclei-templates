@@ -4,7 +4,7 @@ id: spring-actuator-mappings-exposed
 info:
   name: Spring Boot Actuator /mappings Endpoint Exposed
   author: TyrusRC
-  severity: medium
+  severity: high
   description: |
     Detects an exposed Spring Boot Actuator /mappings endpoint that lists
     every DispatcherServlet handler mapping with its method, predicate,

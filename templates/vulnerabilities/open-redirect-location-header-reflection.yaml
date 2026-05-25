@@ -26,6 +26,16 @@ http:
       - "{{BaseURL}}/?go=https://attacker.example.com"
       - "{{BaseURL}}/?redir=https://attacker.example.com"
       - "{{BaseURL}}/?target=https://attacker.example.com"
+      - "{{BaseURL}}/login?next=https://attacker.example.com"
+      - "{{BaseURL}}/login?redirect=https://attacker.example.com"
+      - "{{BaseURL}}/login?return=https://attacker.example.com"
+      - "{{BaseURL}}/logout?redirect=https://attacker.example.com"
+      - "{{BaseURL}}/logout?next=https://attacker.example.com"
+      - "{{BaseURL}}/signin?next=https://attacker.example.com"
+      - "{{BaseURL}}/auth/callback?redirect=https://attacker.example.com"
+      - "{{BaseURL}}/r?url=https://attacker.example.com"
+      - "{{BaseURL}}/redirect?url=https://attacker.example.com"
+      - "{{BaseURL}}/out?url=https://attacker.example.com"
     stop-at-first-match: true
     matchers-condition: and
     matchers:

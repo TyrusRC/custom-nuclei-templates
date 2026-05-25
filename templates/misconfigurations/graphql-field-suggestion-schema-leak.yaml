@@ -26,6 +26,10 @@ http:
       - "{{BaseURL}}/graphql"
       - "{{BaseURL}}/api/graphql"
       - "{{BaseURL}}/graphql/v1"
+      - "{{BaseURL}}/v1/graphql"
+      - "{{BaseURL}}/api/v1/graphql"
+      - "{{BaseURL}}/query"
+      - "{{BaseURL}}/gql"
     stop-at-first-match: true
     headers:
       Content-Type: application/json

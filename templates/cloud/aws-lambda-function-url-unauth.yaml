@@ -36,3 +36,12 @@ http:
         case-insensitive: true
         words:
           - "x-amzn-requestid"
+    extractors:
+      - type: kval
+        kval:
+          - x_amzn_requestid
+          - x_amzn_trace_id
+      - type: dsl
+        name: lambda_url_host
+        dsl:
+          - host
