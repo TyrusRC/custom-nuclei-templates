@@ -25,6 +25,11 @@ http:
         status:
           - 200
       - type: word
+        part: header
+        case-insensitive: true
+        words:
+          - "text/html"
+      - type: word
         part: body
         words:
           - "Aerospike Management Console"

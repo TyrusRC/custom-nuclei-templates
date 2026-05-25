@@ -23,8 +23,11 @@ http:
         status:
           - 200
       - type: word
-        part: body
+        part: header
+        case-insensitive: true
         words:
-          - "tasks"
-          - "kapacitor"
-        condition: and
+          - "application/json"
+      - type: regex
+        part: body
+        regex:
+          - '"tasks"\s*:\s*\['

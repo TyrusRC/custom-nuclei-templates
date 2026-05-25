@@ -33,15 +33,10 @@ http:
           - 200
           - 401
           - 403
-      - type: word
-        part: body
-        case-insensitive: true
+      - type: dsl
+        dsl:
+          - 'contains(tolower(header), "www-authenticate")'
+          - 'regex("(?is)<form[^>]*action\\s*=\\s*[\"\\x27][^\"\\x27]*(login|signin|admin|auth)", body)'
+          - 'contains(tolower(body), "<title>admin") || contains(tolower(body), "<title>administration") || contains(tolower(body), "<title>admin login") || contains(tolower(body), "<title>admin panel")'
+          - 'contains(tolower(body), "administrator login") || contains(tolower(body), "sign in to administration")'
         condition: or
-        words:
-          - "<title>Admin"
-          - "<title>Administration"
-          - "<title>Admin Login"
-          - "<title>Admin Panel"
-          - "Sign in to Administration"
-          - "Administrator Login"
-          - "Control Panel"

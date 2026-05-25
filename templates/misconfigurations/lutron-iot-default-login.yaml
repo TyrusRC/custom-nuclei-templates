@@ -35,8 +35,3 @@ http:
         part: body
         words:
           - "DeviceIP"
-      - type: word
-        part: body
-        case-insensitive: true
-        words:
-          - "lutron"

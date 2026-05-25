@@ -30,9 +30,9 @@ http:
       - type: regex
         part: body
         regex:
-          - "<!--\\s*(?i)(TODO|FIXME|XXX|HACK|DEBUG|PASSWORD|API[_-]?KEY|SECRET|TOKEN|PRIVATE|INTERNAL|DEV|STAGING)(?:-(?!->)|[^-])+-->"
+          - "<!--\\s*(?i)(TODO|FIXME|XXX|HACK|PASSWORD|API[_-]?KEY|SECRET|TOKEN|STAGING|CREDENTIAL)(?:-(?!->)|[^-])+-->"
     extractors:
       - type: regex
         part: body
         regex:
-          - "<!--\\s*(?i)(TODO|FIXME|XXX|HACK|DEBUG|PASSWORD|API[_-]?KEY|SECRET|TOKEN|PRIVATE|INTERNAL|DEV|STAGING)(?:-(?!->)|[^-])+-->"
+          - "<!--\\s*(?i)(TODO|FIXME|XXX|HACK|PASSWORD|API[_-]?KEY|SECRET|TOKEN|STAGING|CREDENTIAL)(?:-(?!->)|[^-])+-->"

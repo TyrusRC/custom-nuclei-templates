@@ -44,4 +44,9 @@ http:
       - type: regex
         part: body
         regex:
-          - '(?i)(database|password|secret|api[_-]?key|connection[_-]?string|<\?php)'
+          - '<\?php'
+          - '(?im)^\s*[A-Z_][A-Z0-9_]*\s*=\s*[''"\w./@:!\-]+'
+          - '(?i)(DB_PASSWORD|DB_USERNAME|DB_HOST|DATABASE_URL|MYSQL_PWD|POSTGRES_PASSWORD|SECRET_KEY|AWS_SECRET|API_KEY|JWT_SECRET)\s*[:=]'
+          - '(?is)<connectionStrings>.*?</connectionStrings>'
+          - '\[(database|client|mysql|postgres|redis)\]'
+        condition: or

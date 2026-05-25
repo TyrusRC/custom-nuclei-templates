@@ -40,6 +40,13 @@ http:
           - 303
           - 307
           - 308
+      - type: word
+        part: header
+        case-insensitive: true
+        negative: true
+        words:
+          - "server: cloudflare"
+          - "cf-ray:"
       - type: regex
         part: header
         regex:
