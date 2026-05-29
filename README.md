@@ -2,7 +2,7 @@
 
 [![validate](https://github.com/TyrusRC/custom-nuclei-templates/actions/workflows/validate.yml/badge.svg)](https://github.com/TyrusRC/custom-nuclei-templates/actions/workflows/validate.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
-[![Templates](https://img.shields.io/badge/templates-150-brightgreen)](templates/)
+[![Templates](https://img.shields.io/badge/templates-155-brightgreen)](templates/)
 [![Tested with nuclei](https://img.shields.io/badge/tested%20with-nuclei%20v3.4.7-orange)](https://github.com/projectdiscovery/nuclei)
 
 > **Unaffiliated.** Independent, community-maintained YAML detection templates that run on the [nuclei](https://github.com/projectdiscovery/nuclei) scanner. Not produced, endorsed, or maintained by [ProjectDiscovery](https://projectdiscovery.io). "Nuclei" and "nuclei-templates" are projects of ProjectDiscovery and referenced here only as the runtime / coverage baseline this repo complements.
