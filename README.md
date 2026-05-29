@@ -1,43 +1,124 @@
 # custom-nuclei-templates
 
-Nuclei v3 templates filling gaps in [projectdiscovery/nuclei-templates](https://github.com/projectdiscovery/nuclei-templates) and [projectdiscovery/nuclei-templates-ai](https://github.com/projectdiscovery/nuclei-templates-ai).
+[![validate](https://github.com/TyrusRC/custom-nuclei-templates/actions/workflows/validate.yml/badge.svg)](https://github.com/TyrusRC/custom-nuclei-templates/actions/workflows/validate.yml)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+[![Templates](https://img.shields.io/badge/templates-98-brightgreen)](templates/)
+[![Tested with nuclei](https://img.shields.io/badge/tested%20with-nuclei%20v3.4.7-orange)](https://github.com/projectdiscovery/nuclei)
 
-92 templates · evergreen **bug-class / family detection** — patterns that catch future CVEs in the same class, not single named CVEs.
+> **Unaffiliated.** Independent, community-maintained YAML detection templates that run on the [nuclei](https://github.com/projectdiscovery/nuclei) scanner. Not produced, endorsed, or maintained by [ProjectDiscovery](https://projectdiscovery.io). "Nuclei" and "nuclei-templates" are projects of ProjectDiscovery and referenced here only as the runtime / coverage baseline this repo complements.
 
-## Why no `cves/`?
+Evergreen **bug-class / family detection** templates — patterns that catch *future* CVEs in the same class, not single named CVEs. Built to fill gaps in the upstream [nuclei-templates](https://github.com/projectdiscovery/nuclei-templates) and [nuclei-templates-ai](https://github.com/projectdiscovery/nuclei-templates-ai) collections.
 
-CVE-specific fingerprints go stale the moment upstream ships a template. We pivoted (2026-05-25) to detection that fires on *attacker-visible behavior or framework misuse*, so the same matcher replays on the next variant.
+## Why bug-class detection?
+
+CVE-specific fingerprints go stale the moment upstream ships a template. Every template here keys off **attacker-visible behavior** or **framework-stable response shape** (HAL `_links`, propertySources, route_id, JWKS structure, HTTP status differentials, etc.) — not vendor brand strings or version markers. The same matcher replays on the next variant in the same family.
+
+Examples:
+
+- `http-cl0-desync-probe` keys off a **status-shape invariant** (200/404 differential on a pipelined follow-up) — fires on any CL.0-vulnerable FE/BE pair regardless of vendor.
+- `jwt-none-algorithm-accepted` keys off **canary acceptance** with an `alg:none` JWT carrying a sub claim of `nuclei-jwt-canary` — fires on any verifier that omits algorithm validation.
+- `spring-actuator-heapdump-exposed` keys off the **HPROF magic bytes** + `Content-Disposition: attachment*heapdump` — fires on any Spring Boot heap dump regardless of version banner.
+
+## Install
+
+```bash
+git clone https://github.com/TyrusRC/custom-nuclei-templates.git
+```
+
+Requires the [nuclei](https://github.com/projectdiscovery/nuclei) scanner — `v3.4.7+` tested.
 
 ## Use
 
 ```bash
-nuclei -u https://target -t /path/to/custom-nuclei-templates/templates/
-nuclei -u https://target -t templates/ -tags custom
+# Scan a single target with the full custom set
+nuclei -u https://target.example.com -t custom-nuclei-templates/templates/
+
+# Filter by custom tag (every template carries 'custom')
+nuclei -u https://target.example.com -t custom-nuclei-templates/templates/ -tags custom
+
+# Scope by category
+nuclei -u https://target.example.com -t custom-nuclei-templates/templates/vulnerabilities/
+nuclei -u https://target.example.com -t custom-nuclei-templates/templates/cloud/
+
+# Scope by severity
+nuclei -u https://target.example.com -t custom-nuclei-templates/templates/ -severity critical,high
 ```
 
-Every template carries the `custom` tag and a `# gap: <id>` first line documenting the upstream gap it fills.
+Every template starts with a `# gap: <id>` first line documenting the upstream gap it fills.
 
 ## Categories
 
-| Dir | Count | Scope |
+| Directory | Count | Coverage |
 |---|---|---|
-| `cloud/` | 12 | AWS / GCP / Azure / Kubernetes misconfigs and unauth surfaces |
-| `exposures/` | 35 | Admin panels, config files, debug endpoints, Spring Boot actuator, Elasticsearch / Jenkins / Prometheus |
-| `misconfigurations/` | 25 | CORS, security headers, OWASP WSTG, default creds |
-| `takeovers/` | 9 | Subdomain-takeover fingerprints (heroku, netlify, shopify, …) |
-| `vulnerabilities/` | 11 | Active-class probes (SSTI, CRLF, SSRF IMDS, OAuth redirect, JWT-none, NoSQL injection, XXE, prototype pollution, request smuggling, cache deception) |
+| [`cloud/`](templates/cloud/) | 13 | AWS / GCP / Azure / Kubernetes misconfigurations and unauth surfaces (IMDS, kubelet, etcd, anon API, ECR, S3, Cloud Run, Lambda) |
+| [`exposures/`](templates/exposures/) | 35 | Spring Boot actuator, Elasticsearch, Jenkins, Prometheus, GraphQL, WEB-INF, `.git`/`.svn`, env files, dev tools |
+| [`misconfigurations/`](templates/misconfigurations/) | 27 | CORS, security headers, OWASP WSTG, default creds, h2c upgrade, JWKS symmetric keys, GraphQL field-suggestion |
+| [`takeovers/`](templates/takeovers/) | 9 | Subdomain takeover fingerprints (Heroku, Netlify, Shopify, …) |
+| [`vulnerabilities/`](templates/vulnerabilities/) | 14 | Active behavior-class probes — SSTI, CRLF, SSRF/IMDS, OAuth open redirect, JWT alg-none, NoSQL operator injection, XXE, prototype pollution, request smuggling family (CL.TE, CL.0, CSD, host-header obfuscation), web cache deception |
+
+## Detection paradigm
+
+| Layer | What we key on | Examples |
+|---|---|---|
+| **Behavior** | Canary echoes, response-shape invariants, parser-differential status codes | JWT canary sub, prototype-pollution `nucleiPollute`, CL.0 follow-up 404 |
+| **Framework shape** | API contracts that don't change across versions | HAL `_links`, Spring `propertySources`, K8s `NamespaceList` |
+| **Magic bytes / standard formats** | File-format invariants | HPROF `JAVA PROFILE 1.0.2`, JSON Web Key Set structure |
+| **Severity discipline** | `critical` only for unauth RCE, in-memory secret leak, source disclosure, takeover, auth bypass, cluster-admin RBAC | Severity-lint enforces justifying keywords (see [`scripts/severity-lint.sh`](scripts/severity-lint.sh)) |
+
+What we **avoid**:
+
+- Vendor brand strings (`Powered by Foo 1.2.3`)
+- Version banners (`Server: Apache/2.4.41`) as primary detection
+- CVE-ID-specific paths (`/vuln-2024-xxxxx`)
+- Loose `contains(both)` matches that fire on docs/debug pages
 
 ## Develop
 
 ```bash
-make validate                         # nuclei -validate
-make lint                             # yamllint
-make index                            # rebuild upstream dedup index
-make stats                            # counts by category / severity
+make help                  # list targets
+make validate              # nuclei -validate -t templates/
+make lint                  # yamllint
+make severity-lint         # flag critical without justifying keyword
+make template-meta-lint    # enforce # gap line / id / author / tags
+make test                  # bats unit tests
+make ci                    # all of the above
+
+make index                 # rebuild docs/upstream-index/ from both upstream repos
+make check-dup ID=<id>     # confirm an id is not already upstream
+make stats                 # counts by category and severity
 ```
 
-New templates must dedup against both upstream repos via the index in `docs/upstream-index/`. Family-style detection should key off behavior (reflected payloads, header divergence, response shape) rather than vendor brand strings.
+New templates must:
+
+1. **Dedup** against both upstream repos via `make check-dup ID=<id>` (rebuild index first with `make index`).
+2. **Key off behavior**, not vendor brand strings or single CVE markers.
+3. **Pass `make ci`** (validate + yamllint + severity-lint + meta-lint + bats).
+4. Start with a `# gap: <id>` first line.
+5. Use the `custom` tag plus a category tag (`vulnerabilities`, `misconfig`, `cloud`, `exposure`, `takeover`).
+
+Severity calibration is enforced — `critical` requires a description keyword in the family of `unauth.*rce`, `in-memory secret`, `heap dump`, `source disclosure`, `account takeover`, `auth bypass`, `cluster-admin`, `arbitrary command`, etc. See [`scripts/severity-lint.sh`](scripts/severity-lint.sh) for the full regex.
+
+## CI
+
+Every push / PR to `main` runs the full pipeline via [`.github/workflows/validate.yml`](.github/workflows/validate.yml):
+
+- `yamllint` syntax check
+- `nuclei -validate` semantic check
+- `severity-lint` calibration check
+- `template-meta-lint` metadata convention check
+- `bats` dedup-script unit tests
 
 ## License
 
-Apache 2.0 — see `LICENSE`.
+[Apache 2.0](LICENSE).
+
+## Acknowledgments
+
+- [ProjectDiscovery](https://github.com/projectdiscovery) — for the `nuclei` scanner and the upstream template ecosystem this repo complements
+- [PortSwigger Research](https://portswigger.net/research) — request smuggling, desync, JWT, and cache-poisoning research backing the desync-family templates
+- [OWASP WSTG](https://owasp.org/www-project-web-security-testing-guide/) — methodology for the misconfiguration probes
+- [Reversec Labs](https://labs.reversec.com/) — OPA Gatekeeper bypass research
+
+## Trademarks
+
+"Nuclei" and "nuclei-templates" are projects of [ProjectDiscovery](https://projectdiscovery.io). All references are nominative and for interoperability only.
