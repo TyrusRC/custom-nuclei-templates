@@ -1,0 +1,72 @@
+# gap: mlflow-api-experiments-anonymous
+id: mlflow-api-experiments-anonymous
+
+info:
+  name: MLflow REST API Anonymous Experiments Disclosure
+  author: TyrusRC
+  severity: high
+  description: |
+    Detects an MLflow tracking server where /api/2.0/mlflow/experiments/
+    search is reachable without authentication, returning the experiment
+    catalog as a JSON `experiments` array with stable MLflow fields
+    `experiment_id`, `artifact_location`, `lifecycle_stage`, and
+    `creation_time`. Class detection — matches MLflow's documented
+    REST API shape, not vendor banner.
+
+    Anonymous MLflow API access leaks the ML workflow inventory:
+    experiment names (often disclosing model purposes and customer
+    segments), artifact_location URIs (frequently S3 / GCS / Azure
+    Blob paths embedded with credentials or pointing at otherwise-
+    private buckets), and run parameters that capture training data
+    paths and hyperparameter sweeps. Combined with /api/2.0/mlflow/
+    runs/search the response chains into source-code disclosure
+    (training scripts logged as artifacts) and in-memory secret leak
+    (env vars / connection strings logged as run tags).
+    Complements upstream `mlflow-panel` and `mlflow-unauth` (which
+    fingerprint the UI) with a REST-API-level disclosure signal.
+  reference:
+    - https://mlflow.org/docs/latest/rest-api.html
+    - https://github.com/mlflow/mlflow/security/advisories
+  tags: custom,exposures,mlflow,ai,mlops,disclosure,cwe-200
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/api/2.0/mlflow/experiments/search?max_results=1"
+      - "{{BaseURL}}/ajax-api/2.0/mlflow/experiments/search?max_results=1"
+
+    stop-at-first-match: true
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: header
+        words:
+          - "application/json"
+      - type: regex
+        part: body
+        regex:
+          - '"experiments"\s*:\s*(\[|null)'
+      - type: word
+        part: body
+        words:
+          - '"experiment_id"'
+          - '"artifact_location"'
+          - '"lifecycle_stage"'
+        condition: or
+
+    extractors:
+      - type: regex
+        part: body
+        name: experiment-names
+        regex:
+          - '"name"\s*:\s*"([^"]+)"'
+        group: 1
+      - type: regex
+        part: body
+        name: artifact-locations
+        regex:
+          - '"artifact_location"\s*:\s*"([^"]+)"'
+        group: 1
