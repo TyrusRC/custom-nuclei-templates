@@ -2,7 +2,7 @@
 
 [![validate](https://github.com/TyrusRC/custom-nuclei-templates/actions/workflows/validate.yml/badge.svg)](https://github.com/TyrusRC/custom-nuclei-templates/actions/workflows/validate.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
-[![Templates](https://img.shields.io/badge/templates-132-brightgreen)](templates/)
+[![Templates](https://img.shields.io/badge/templates-138-brightgreen)](templates/)
 [![Tested with nuclei](https://img.shields.io/badge/tested%20with-nuclei%20v3.4.7-orange)](https://github.com/projectdiscovery/nuclei)
 
 > **Unaffiliated.** Independent, community-maintained YAML detection templates that run on the [nuclei](https://github.com/projectdiscovery/nuclei) scanner. Not produced, endorsed, or maintained by [ProjectDiscovery](https://projectdiscovery.io). "Nuclei" and "nuclei-templates" are projects of ProjectDiscovery and referenced here only as the runtime / coverage baseline this repo complements.
@@ -51,10 +51,10 @@ Every template starts with a `# gap: <id>` first line documenting the upstream g
 | Directory | Count | Coverage |
 |---|---|---|
 | [`cloud/`](templates/cloud/) | 14 | AWS / GCP / Azure / Kubernetes misconfigurations and unauth surfaces (IMDS, kubelet, etcd, anon API, OpenAPI discovery, ECR, S3, Cloud Run, Lambda, OPA Gatekeeper bypass) |
-| [`exposures/`](templates/exposures/) | 54 | Spring Boot actuator, Elasticsearch, Jenkins, Prometheus, Alertmanager, GraphQL, WEB-INF, `.git`/`.svn`, env files, dev tools, Envoy admin, OpenTelemetry zPages, Vault seal-status, Grafana Loki / Tempo, Linkerd dataplane, ArgoCD applications, Nomad jobs, Boundary auth-methods, MLflow experiments, Tekton PipelineRuns, Spinnaker applications, Istio Pilot debug, Flux CD HelmReleases, Crossplane Providers, LangServe Runnable, vLLM model list |
+| [`exposures/`](templates/exposures/) | 59 | Spring Boot actuator, Elasticsearch, Jenkins, Prometheus, Alertmanager, GraphQL, WEB-INF, `.git`/`.svn`, env files, dev tools, Envoy admin, OpenTelemetry zPages, Vault seal-status, Grafana Loki / Tempo, Linkerd dataplane, ArgoCD applications, Nomad jobs, Boundary auth-methods, MLflow experiments, Tekton PipelineRuns, Spinnaker applications, Istio Pilot debug, Flux CD HelmReleases, Crossplane Providers, LangServe Runnable, vLLM model list, n8n workflows, Backstage catalog, Kestra flows, Pulsar tenants, APISIX admin |
 | [`misconfigurations/`](templates/misconfigurations/) | 35 | CORS, security headers, OWASP WSTG, default creds, h2c upgrade, JWKS symmetric keys, GraphQL field-suggestion, OAuth PKCE plain / implicit / password-grant advertised, OAuth dynamic client registration, OAuth jwks_uri over HTTP, OIDC userinfo anonymous, CSP effectively disabled, CSP frame-ancestors permissive, Service Worker root-scope |
 | [`takeovers/`](templates/takeovers/) | 9 | Subdomain takeover fingerprints (Heroku, Netlify, Shopify, …) |
-| [`vulnerabilities/`](templates/vulnerabilities/) | 20 | Active behavior-class probes — SSTI (active arithmetic + error-engine), CRLF, SSRF/IMDS, OAuth open redirect / wildcard redirect_uri, JWT alg-none, NoSQL operator injection, XPath / LDAP injection error disclosure, PHP unserialize error disclosure, XXE, prototype pollution, host-header password-reset poisoning, request smuggling family (CL.TE, CL.0, CSD, host-header obfuscation), web cache deception |
+| [`vulnerabilities/`](templates/vulnerabilities/) | 21 | Active behavior-class probes — SSTI (active arithmetic + error-engine), CRLF, SSRF/IMDS, OAuth open redirect / wildcard redirect_uri, JWT alg-none, NoSQL operator injection, XPath / LDAP injection error disclosure, PHP unserialize error disclosure, WebDAV PROPFIND listing, XXE, prototype pollution, host-header password-reset poisoning, request smuggling family (CL.TE, CL.0, CSD, host-header obfuscation), web cache deception |
 
 ## Detection paradigm
 
