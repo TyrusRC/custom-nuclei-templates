@@ -48,3 +48,23 @@ http:
           - 'contains(body, "\"kind\":\"PodList\"") && contains(body, "\"items\"")'
           - 'contains(body, "\"kind\":\"KubeletConfiguration\"") || contains(body, "\"kubeletconfig\"")'
         condition: or
+
+    extractors:
+      - type: regex
+        part: body
+        name: pod-names
+        regex:
+          - '"name"\s*:\s*"([a-z0-9-]+)"\s*,\s*"namespace"\s*:\s*"([a-z0-9-]+)"'
+        group: 1
+      - type: regex
+        part: body
+        name: namespaces
+        regex:
+          - '"namespace"\s*:\s*"([a-z0-9-]+)"'
+        group: 1
+      - type: regex
+        part: body
+        name: kubelet-version
+        regex:
+          - '"kubeletVersion"\s*:\s*"([^"]+)"'
+        group: 1
