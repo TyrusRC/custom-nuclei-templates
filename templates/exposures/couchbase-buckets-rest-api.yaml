@@ -4,7 +4,7 @@ id: couchbase-buckets-rest-api
 info:
   name: Couchbase Buckets REST API Unauthenticated
   author: TyrusRC
-  severity: info
+  severity: medium
   description: |
     Detects an unauthenticated Couchbase /pools/default/buckets REST API
     response. The endpoint returns the cluster's bucket inventory including
@@ -30,8 +30,23 @@ http:
           - "application/json"
       - type: word
         part: body
+        # bucketType is Couchbase-specific; nodes co-occurrence narrows further.
+        # Generic keys like "name" intentionally excluded.
         words:
           - '"bucketType"'
           - '"nodes"'
-          - '"name"'
         condition: and
+
+    extractors:
+      - type: regex
+        part: body
+        name: bucket-names
+        regex:
+          - '"name"\s*:\s*"([^"]+)"\s*,\s*"bucketType"'
+        group: 1
+      - type: regex
+        part: body
+        name: bucket-types
+        regex:
+          - '"bucketType"\s*:\s*"(membase|memcached|ephemeral)"'
+        group: 1
