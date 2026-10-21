@@ -11,12 +11,12 @@ info:
     and perform denial-of-service (FLUSHALL, DEBUG SEGFAULT).
   tags: network,redis,misconfig,rce
 
-network:
+tcp:
   - inputs:
       - data: "PING\r\n"
     host:
       - "{{Hostname}}"
-    port: "{{Port}}"
+    port: 6379
     read-size: 32
 
     matchers:

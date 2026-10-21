@@ -14,24 +14,21 @@ info:
     do not exist (e.g. minimal container).
   tags: network,redis,misconfig,rce
 
-network:
+tcp:
   - inputs:
-      - data: "*4\r\n$6\r\nCONFIG\r\n$3\r\nGET\r\n$3\r\ndir\r\n"
+      - data: "*3\r\n$6\r\nCONFIG\r\n$3\r\nGET\r\n$3\r\ndir\r\n"
     host:
       - "{{Hostname}}"
-    port: "{{Port}}"
+    port: 6379
     read-size: 256
 
+    matchers-condition: and
     matchers:
       - type: word
         words:
-          - "$3\r\ndir"
-        negative: true
+          - "dir"
+
       - type: word
         words:
           - "-NOAUTH"
         negative: true
-      - type: regex
-        regex:
-          - "\\$[0-9]+\r\n/"
-    matchers-condition: and
