@@ -89,7 +89,7 @@ http:
         name: ddos-guard
 
     extractors:
-      - type: kv
+      - type: kval
         part: header
-        kv:
+        kval:
           - server
